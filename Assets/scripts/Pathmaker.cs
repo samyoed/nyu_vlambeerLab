@@ -19,12 +19,72 @@ public class Pathmaker : MonoBehaviour {
 //	Declare a public Transform called floorPrefab, assign the prefab in inspector;
 //	Declare a public Transform called pathmakerSpherePrefab, assign the prefab in inspector; 		// you'll have to make a "pathmakerSphere" prefab later
 
+	private int counter;
+	public Transform floorPrefab;
+	public Transform floorPrefab1;
+	public Transform floorPrefab2;
+	public Transform pathmakerSpherePrefab;
+	public GameObject  godObject;
 
+
+	void Start()
+	{
+		godObject = GameObject.FindWithTag("God");
+	}
+	
 	void Update () {
 //		If counter is less than 50, then:
-//			Generate a random number from 0.0f to 1.0f;
-//			If random number is less than 0.25f, then rotate myself 90 degrees;
-//				... Else if number is 0.25f-0.5f, then rotate myself -90 degrees;
+		if (counter < 50 && godObject.GetComponent< GodScript >().maxFloorsHit == false)
+		{
+			//			Generate a random number from 0.0f to 1.0f;
+			//			If random number is less than 0.25f, then rotate myself 90 degrees;
+			float randNum = Random.Range(0.0f, 1.0f);
+			if (randNum < 0.25f)
+			{
+				transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y+ 90, transform.eulerAngles.z);
+			}
+			//				... Else if number is 0.25f-0.5f, then rotate myself -90 degrees;
+			else if (randNum >= 0.25f && randNum < 0.5f)
+			{
+				transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y - 90, transform.eulerAngles.z);
+			}
+			else if (randNum > 0.97 && randNum < 1.0f)
+			{
+
+				
+					Instantiate(pathmakerSpherePrefab, transform.position, Quaternion.identity);
+				
+				
+				
+			}
+			int randNum2 = Random.Range(0, 3);
+			if (randNum2 == 0)
+			{
+				Transform floorObject = (Transform) Instantiate(floorPrefab, transform.position, Quaternion.identity);
+				godObject.GetComponent<GodScript>().floorList.Add(floorObject);
+			}
+			else if (randNum2 == 2)
+			{
+				Transform floorObject2 = (Transform) Instantiate(floorPrefab1, transform.position, Quaternion.identity);
+				godObject.GetComponent<GodScript>().floorList.Add(floorObject2);
+			}
+			else if (randNum2 == 1)
+			{
+				Transform floorObject3 = (Transform) Instantiate(floorPrefab2, transform.position, Quaternion.identity);
+				godObject.GetComponent<GodScript>().floorList.Add(floorObject3);
+			}
+
+			transform.position += transform.forward * 5;
+			counter++;
+		}
+		else
+		{
+			Destroy(gameObject);
+		}
+
+
+		
+
 //				... Else if number is 0.99f-1.0f, then instantiate a pathmakerSpherePrefab clone at my current position;
 //			// end elseIf
 
